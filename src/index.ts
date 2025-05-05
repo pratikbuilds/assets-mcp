@@ -152,7 +152,13 @@ export class MyMCP extends McpAgent {
           console.log("Cleaned params:", processedParams);
 
           const searchAssetParams = processedParams as DAS.SearchAssetsRequest;
-
+          const env = this.env as { HELIUS_API_KEY?: string };
+          if (!env.HELIUS_API_KEY) {
+            throw new Error(
+              "HELIUS_API_KEY is not set in environment variables"
+            );
+          }
+          const helius = new Helius(env.HELIUS_API_KEY);
           const assetsResponse = await helius.rpc.searchAssets(
             searchAssetParams
           );
